@@ -1,0 +1,58 @@
+version: '2'
+services:
+  php:
+    build: .
+    image: wuhu:latest
+    expose:
+      - 9000
+    volumes:
+      - ./www_admin:/var/www/www_admin
+      - ./www_party:/var/www/www_party
+      - ./entries_private:/var/www/entries_private
+      - ./entries_public:/var/www/entries_public
+      - ./screenshots:/var/www/screenshots
+  admin:
+    image: webdevops/apache:latest
+    environment:
+      WEB_DOCUMENT_ROOT: /var/www/www_admin
+      WEB_ALIAS_DOMAIN: www.admin
+      WEB_PHP_SOCKET: php:9000
+    volumes:
+      - ./www_admin:/var/www/www_admin
+      - ./www_party:/var/www/www_party
+      - ./entries_private:/var/www/entries_private
+      - ./entries_public:/var/www/entries_public
+      - ./screenshots:/var/www/screenshots
+    ports:
+      - 8081:80
+    links:
+      - php
+
+  party:
+    image: webdevops/apache:latest
+    environment:
+      WEB_DOCUMENT_ROOT: /var/www/www_party
+      WEB_ALIAS_DOMAIN: www.party
+      WEB_PHP_SOCKET: php:9000
+    volumes:
+      - ./www_admin:/var/www/www_admin
+      - ./www_party:/var/www/www_party
+      - ./entries_private:/var/www/entries_private
+      - ./entries_public:/var/www/entries_public
+      - ./screenshots:/var/www/screenshots
+    ports:
+      - 8080:80
+    links:
+      - php
+
+  mysql:
+    image: mariadb:latest
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: wuhu
+      MYSQL_USER: wuhu
+      MYSQL_PASSWORD: wuhu
+    volumes:
+      - ./database:/var/lib/mysql
+    expose:
+      - 3306
