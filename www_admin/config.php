@@ -140,7 +140,7 @@ function perform(&$msg) {
 
   // end of checks
     
-  SQLLib::$link = mysqli_connect("localhost",$_POST["mysql_username"],$_POST["mysql_password"],$_POST["mysql_database"]);
+  SQLLib::$link = mysqli_connect("mysql",$_POST["mysql_username"],$_POST["mysql_password"],$_POST["mysql_database"]);
   if (mysqli_connect_errno(SQLLib::$link))
   {
     $msg = "Unable to connect to MySQL: ".mysqli_connect_error();
@@ -202,7 +202,7 @@ function perform(&$msg) {
   for($x=0;$x<64;$x++) $salt.=chr(rand(0x30,0x7a));
   $db =   
   "<"."?\n".
-  "define('SQL_HOST','localhost');\n".
+  "define('SQL_HOST','mysql');\n".
   "define('SQL_USERNAME',\"".addslashes($_POST["mysql_username"])."\");\n".
   "define('SQL_PASSWORD',\"".addslashes($_POST["mysql_password"])."\");\n".
   "define('SQL_DATABASE',\"".addslashes($_POST["mysql_database"])."\");\n".
@@ -217,7 +217,6 @@ function perform(&$msg) {
   if ($_POST["admin_username"] && $_POST["admin_password"] ) {
     $htaccess =
     "AuthUserFile ".dirname($_SERVER["SCRIPT_FILENAME"])."/.htpasswd\n".
-    "AuthGroupFile /dev/null\n".
     "AuthName 'Wuhu Virtual Organizer Area - Enter password to continue'\n".
     "AuthType Basic\n".
     "\n".
@@ -315,7 +314,7 @@ Hi. Welcome. Good luck.
   share the files with the visitors or to upload to scene.org. Should have read/write permissions for Apache.)</small>
   </td>
   <td>
-  <input name="public_ftp_dir" value="<?=htmlspecialchars($_POST["public_ftp_dir"]?$_POST["public_ftp_dir"]:"")?>"/>
+  <input name="public_ftp_dir" value="<?=htmlspecialchars($_POST["public_ftp_dir"]?$_POST["public_ftp_dir"]:"/var/www/entries_public")?>"/>
   </td>
 </tr>
 
@@ -364,21 +363,21 @@ if ($a) printf("<small>Haven't set one up yet? <a href='%s' target='_blank'>Here
 ?>  
   </td>
   <td>
-  <input name="mysql_database" value="<?=htmlspecialchars($_POST["mysql_database"]?$_POST["mysql_database"]:"")?>"/>
+  <input name="mysql_database" value="<?=htmlspecialchars($_POST["mysql_database"]?$_POST["mysql_database"]:"wuhu")?>"/>
   </td>
 </tr>
 
 <tr>
   <td>MySQL username for the party engine:</td>
   <td>
-  <input name="mysql_username" value="<?=htmlspecialchars($_POST["mysql_username"]?$_POST["mysql_username"]:"")?>"/>
+  <input name="mysql_username" value="<?=htmlspecialchars($_POST["mysql_username"]?$_POST["mysql_username"]:"wuhu")?>"/>
   </td>
 </tr>
 
 <tr>
   <td>MySQL password for the party engine:</td>
   <td>
-  <input name="mysql_password" value="<?=htmlspecialchars($_POST["mysql_password"]?$_POST["mysql_password"]:"")?>" type="password"/>
+  <input name="mysql_password" value="<?=htmlspecialchars($_POST["mysql_password"]?$_POST["mysql_password"]:"wuhu")?>" type="password"/>
   </td>
 </tr>
 
